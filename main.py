@@ -1,43 +1,68 @@
 import gradio as gr
 
+from orchestrator import generate_policy_workflow
 
-def generate_policy(topic: str) -> str:
+
+def generate_policy(topic: str):
     """
-    Placeholder function.
-    Later, this will call your multi-agent workflow.
+    Invoked by the Gradio interface.
     """
+
     if not topic.strip():
-        return "Please enter a policy topic."
+        return (
+            "Please enter a policy topic.",
+            {},
+            "",
+        )
 
-    # TODO: Call the policy generation workflow here.
-    return "Policy generation successful"
+    result = generate_policy_workflow(topic)
+
+    return (
+        result.policy.markdown,
+        result.evaluation.model_dump(),
+        result.publication.message,
+    )
 
 
 with gr.Blocks(title="Policy Brief Generator") as demo:
+
     gr.Markdown("# Policy Brief Generator")
+
     gr.Markdown(
         "Enter a policy topic below to generate a balanced policy brief."
     )
 
-    with gr.Row():
-        topic_input = gr.Textbox(
-            label="Policy Topic",
-            placeholder="e.g. Should remote work be mandatory?",
-            lines=2,
-        )
+    topic_input = gr.Textbox(
+        label="Policy Topic",
+        placeholder="e.g. Should remote work be mandatory?",
+        lines=2,
+    )
 
     generate_button = gr.Button("Generate Policy")
 
-    output = gr.Textbox(
-        label="Status",
+    policy_output = gr.Markdown(
+        label="Generated Policy"
+    )
+
+    evaluation_output = gr.JSON(
+        label="Evaluation"
+    )
+
+    publisher_output = gr.Textbox(
+        label="Publisher Report",
         interactive=False,
     )
 
     generate_button.click(
         fn=generate_policy,
         inputs=topic_input,
-        outputs=output,
+        outputs=[
+            policy_output,
+            evaluation_output,
+            publisher_output,
+        ],
     )
+
 
 if __name__ == "__main__":
     demo.launch()

@@ -2,7 +2,9 @@ from agents import Agent, Runner
 
 from models.evaluation import Evaluation
 from models.policy import PolicyDocument
+
 from tools.prompt_loader import load_prompt
+from tools.prompt_builder import build_evaluator_prompt
 
 
 instructions = load_prompt("evaluator.md")
@@ -14,21 +16,16 @@ evaluator_agent = Agent(
 )
 
 
-def run(policy: PolicyDocument) -> Evaluation:
+def run(
+    policy: PolicyDocument,
+) -> Evaluation:
     """
-    Evaluates the generated policy.
+    Evaluates a generated policy.
     """
 
-    prompt = f"""
-Evaluate the following policy document.
-
-Title:
-{policy.title}
-
-Markdown:
-
-{policy.markdown}
-"""
+    prompt = build_evaluator_prompt(
+        policy,
+    )
 
     result = Runner.run_sync(
         evaluator_agent,

@@ -3,7 +3,9 @@ from agents import Agent, Runner
 from models.evaluation import Evaluation
 from models.policy import PolicyDocument
 from models.publication import PublicationReport
+
 from tools.prompt_loader import load_prompt
+from tools.prompt_builder import build_publisher_prompt
 
 
 instructions = load_prompt("publisher.md")
@@ -20,29 +22,13 @@ def run(
     evaluation: Evaluation,
 ) -> PublicationReport:
     """
-    Publishes the policy.
+    Publishes a policy document.
     """
 
-    prompt = f"""
-Policy Title:
-{policy.title}
-
-Evaluation
-
-Clarity: {evaluation.clarity}
-Fairness: {evaluation.fairness}
-Actionability: {evaluation.actionability}
-Compliance: {evaluation.compliance}
-
-Justification:
-{evaluation.justification}
-
-Strengths:
-{"\n".join(f"- {item}" for item in evaluation.strengths)}
-
-Improvements:
-{"\n".join(f"- {item}" for item in evaluation.improvements)}
-"""
+    prompt = build_publisher_prompt(
+        policy,
+        evaluation,
+    )
 
     result = Runner.run_sync(
         publisher_agent,

@@ -2,7 +2,9 @@ from agents import Agent, Runner
 
 from models.debate import DebateArguments
 from models.policy import PolicyDocument
+
 from tools.prompt_loader import load_prompt
+from tools.prompt_builder import build_aggregator_prompt
 
 
 instructions = load_prompt("aggregator.md")
@@ -23,26 +25,11 @@ def run(
     Generates a balanced policy document.
     """
 
-    supporting_arguments = "\n".join(
-        f"- {argument}"
-        for argument in proponent.arguments
+    prompt = build_aggregator_prompt(
+        topic,
+        proponent,
+        opponent,
     )
-
-    opposing_arguments = "\n".join(
-        f"- {argument}"
-        for argument in opponent.arguments
-    )
-
-    prompt = f"""
-Policy Topic:
-{topic}
-
-Supporting Arguments:
-{supporting_arguments}
-
-Opposing Arguments:
-{opposing_arguments}
-"""
 
     result = Runner.run_sync(
         aggregator_agent,

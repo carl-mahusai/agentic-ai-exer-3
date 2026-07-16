@@ -2,6 +2,7 @@ from agents import Agent, Runner
 
 from models.debate import DebateArguments
 from models.policy import PolicyDocument
+from models.aggregator import AggregatorOutput
 
 from tools.prompt_loader import load_prompt
 from tools.prompt_builder import build_aggregator_prompt
@@ -12,7 +13,7 @@ instructions = load_prompt("aggregator.md")
 aggregator_agent = Agent(
     name="Aggregator Agent",
     instructions=instructions,
-    output_type=PolicyDocument,
+    output_type=AggregatorOutput,
 )
 
 
@@ -35,8 +36,6 @@ def run(
         aggregator_agent,
         prompt,
     )
-
-    # return result.final_output
 
     return PolicyDocument(
         title=result.final_output.title,

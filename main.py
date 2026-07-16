@@ -35,7 +35,7 @@ def generate_policy(topic: str):
 
         result.evaluation.model_dump(),
 
-        result.publication.message,
+        result.publication.report,
     )
 
 
@@ -54,16 +54,6 @@ with gr.Blocks(title="Policy Brief Generator") as demo:
     )
 
     generate_button = gr.Button("Generate Policy")
-
-    # with gr.Row():
-
-    #     with gr.Group():
-    #         gr.Markdown("## 👍 Proponent Arguments")
-    #         proponent_output = gr.Markdown()
-
-    #     with gr.Group():
-    #         gr.Markdown("## 👎 Opponent Arguments")
-    #         opponent_output = gr.Markdown()
 
     with gr.Row():
 

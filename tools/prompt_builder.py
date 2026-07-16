@@ -2,6 +2,18 @@ from models.debate import DebateArguments
 from models.evaluation import Evaluation
 from models.policy import PolicyDocument
 
+def format_bullets(items: list[str]) -> str:
+    """
+    Formats a list of strings as a Markdown bullet list.
+    """
+
+    if not items:
+        return "None"
+
+    return "\n".join(
+        f"- {item}"
+        for item in items
+    )
 
 def build_aggregator_prompt(
     topic: str,
@@ -12,15 +24,19 @@ def build_aggregator_prompt(
     Builds the prompt for the Aggregator Agent.
     """
 
-    supporting_arguments = "\n".join(
-        f"- {argument}"
-        for argument in proponent.arguments
-    )
+    # supporting_arguments = "\n".join(
+    #     f"- {argument}"
+    #     for argument in proponent.arguments
+    # )
 
-    opposing_arguments = "\n".join(
-        f"- {argument}"
-        for argument in opponent.arguments
-    )
+    # opposing_arguments = "\n".join(
+    #     f"- {argument}"
+    #     for argument in opponent.arguments
+    # )
+
+    supporting_arguments = format_bullets(proponent.arguments)
+
+    opposing_arguments = format_bullets(opponent.arguments)
 
     return f"""
 Policy Topic:
@@ -53,24 +69,22 @@ Policy:
 """.strip()
 
 
-from models.evaluation import Evaluation
-from models.policy import PolicyDocument
-
 
 def build_publisher_prompt(
     policy: PolicyDocument,
     evaluation: Evaluation,
+    overall_score: float,
+    passed: bool,
+    pdf_path: str | None,
 ) -> str:
-    """
-    Builds the prompt for the Publisher Agent.
-    """
+
+    status = "PASS" if passed else "FAIL"
+
+    pdf_location = pdf_path if pdf_path else "No PDF generated."
 
     return f"""
 Policy Title:
 {policy.title}
-
-Policy Topic:
-{policy.topic}
 
 Policy Document:
 
@@ -79,12 +93,18 @@ Policy Document:
 Evaluation Scores
 
 Clarity: {evaluation.clarity}
-
 Fairness: {evaluation.fairness}
-
 Actionability: {evaluation.actionability}
-
 Compliance: {evaluation.compliance}
+
+Overall Score:
+{overall_score:.2f}
+
+Status:
+{status}
+
+PDF Location:
+{pdf_location}
 
 Evaluator Feedback
 
@@ -92,10 +112,10 @@ Justification:
 {evaluation.justification}
 
 Strengths:
-{"\n".join(f"- {strength}" for strength in evaluation.strengths)}
+{format_bullets(evaluation.strengths)}
 
 Improvements:
-{"\n".join(f"- {improvement}" for improvement in evaluation.improvements)}
+{format_bullets(evaluation.improvements)}
 """
 
 

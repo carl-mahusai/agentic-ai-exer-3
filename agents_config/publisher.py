@@ -2,7 +2,10 @@ from agents import Agent, Runner
 
 from models.evaluation import Evaluation
 from models.policy import PolicyDocument
-from models.publication import PublicationReport
+from models.publication import (
+    PublicationReport,
+    PublisherSummary,
+)
 
 from tools.evaluation import (
     calculate_overall_score,
@@ -11,14 +14,14 @@ from tools.evaluation import (
 
 from tools.pdf import generate_pdf
 
-from tools.evaluation_tools import (
-    calculate_overall_score_tool,
-    determine_pass_fail_tool,
-)
+# from tools.evaluation_tools import (
+#     calculate_overall_score_tool,
+#     determine_pass_fail_tool,
+# )
 
-from tools.pdf_tools import (
-    generate_pdf_tool,
-)
+# from tools.pdf_tools import (
+#     generate_pdf_tool,
+# )
 
 from tools.prompt_builder import build_publisher_prompt
 from tools.prompt_loader import load_prompt
@@ -27,15 +30,21 @@ from tools.prompt_loader import load_prompt
 instructions = load_prompt("publisher.md")
 
 
+# publisher_agent = Agent(
+#     name="Publisher Agent",
+#     instructions=instructions,
+#     output_type=PublisherSummary,
+#     tools=[
+#         calculate_overall_score_tool,
+#         determine_pass_fail_tool,
+#         generate_pdf_tool,
+#     ],
+# )
+
 publisher_agent = Agent(
     name="Publisher Agent",
     instructions=instructions,
-    output_type=PublicationReport,
-    tools=[
-        calculate_overall_score_tool,
-        determine_pass_fail_tool,
-        generate_pdf_tool,
-    ],
+    output_type=PublisherSummary,
 )
 
 
@@ -65,8 +74,11 @@ def run(
         )
 
     prompt = build_publisher_prompt(
-        policy,
-        evaluation,
+        policy=policy,
+        evaluation=evaluation,
+        overall_score=overall_score,
+        passed=passed,
+        pdf_path=pdf_path,
     )
 
     result = Runner.run_sync(
@@ -74,9 +86,11 @@ def run(
         prompt,
     )
 
+    summary = result.final_output
+
     return PublicationReport(
         overall_score=overall_score,
         passed=passed,
         pdf_path=pdf_path,
-        message=result.final_output.message,
+        report=summary.report,
     )

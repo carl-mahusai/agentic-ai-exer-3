@@ -20,16 +20,18 @@ This is a placeholder compromise policy.
 
 ## Supporting Arguments
 
-{chr(10).join(f"- {arg}" for arg in proponent.arguments)}
+{"\n".join(f"- {arg}" for arg in proponent.arguments)}
 
 ## Opposing Arguments
 
-{chr(10).join(f"- {arg}" for arg in opponent.arguments)}
+{"\n".join(f"- {arg}" for arg in opponent.arguments)}
 
 ## Justification
 
 This policy attempts to balance both viewpoints.
 """
+
+    print(markdown)
 
     return PolicyDocument(
         title=topic,

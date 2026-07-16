@@ -12,7 +12,17 @@ def run(
     Placeholder implementation.
     """
 
-    markdown = f"""# {topic}
+    supporting_arguments = "\n".join(
+        f"- {argument}"
+        for argument in proponent.arguments
+    )
+
+    opposing_arguments = "\n".join(
+        f"- {argument}"
+        for argument in opponent.arguments
+    )
+
+    markdown = f"""# {topic}    
 
 ## Policy
 
@@ -20,11 +30,11 @@ This is a placeholder compromise policy.
 
 ## Supporting Arguments
 
-{"\n".join(f"- {arg}" for arg in proponent.arguments)}
+{supporting_arguments}
 
 ## Opposing Arguments
 
-{"\n".join(f"- {arg}" for arg in opponent.arguments)}
+{opposing_arguments}
 
 ## Justification
 

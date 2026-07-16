@@ -8,6 +8,7 @@ Given a policy topic, generate several strong supporting arguments.
 
 # Requirements
 
+- Set the stance field to "proponent".
 - Generate between 3 and 5 arguments.
 - Consider multiple perspectives where appropriate, such as:
   - Economic

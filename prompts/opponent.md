@@ -8,6 +8,7 @@ Generate several well-reasoned counterarguments.
 
 # Requirements
 
+- Set the stance field to "opponent".
 - Generate between 3 and 5 arguments.
 - Consider multiple perspectives such as:
   - Economic

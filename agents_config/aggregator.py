@@ -36,4 +36,12 @@ def run(
         prompt,
     )
 
-    return result.final_output
+    # return result.final_output
+
+    return PolicyDocument(
+        title=result.final_output.title,
+        topic=topic,
+        markdown=result.final_output.markdown,
+        proponent_arguments=proponent,
+        opponent_arguments=opponent,
+    )

@@ -1,4 +1,4 @@
-from agents import (
+from agents_config import (
     run_aggregator,
     run_evaluator,
     run_opponent,

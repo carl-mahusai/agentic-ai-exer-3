@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 import gradio as gr
 
 from orchestrator import generate_policy_workflow

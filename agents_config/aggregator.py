@@ -1,5 +1,17 @@
+from agents import Agent, Runner
+
 from models.debate import DebateArguments
 from models.policy import PolicyDocument
+from tools.prompt_loader import load_prompt
+
+
+instructions = load_prompt("aggregator.md")
+
+aggregator_agent = Agent(
+    name="Aggregator Agent",
+    instructions=instructions,
+    output_type=PolicyDocument,
+)
 
 
 def run(
@@ -8,8 +20,7 @@ def run(
     opponent: DebateArguments,
 ) -> PolicyDocument:
     """
-    Produces a balanced policy document.
-    Placeholder implementation.
+    Generates a balanced policy document.
     """
 
     supporting_arguments = "\n".join(
@@ -22,28 +33,20 @@ def run(
         for argument in opponent.arguments
     )
 
-    markdown = f"""# {topic}    
+    prompt = f"""
+Policy Topic:
+{topic}
 
-## Policy
-
-This is a placeholder compromise policy.
-
-## Supporting Arguments
-
+Supporting Arguments:
 {supporting_arguments}
 
-## Opposing Arguments
-
+Opposing Arguments:
 {opposing_arguments}
-
-## Justification
-
-This policy attempts to balance both viewpoints.
 """
 
-    print(markdown)
-
-    return PolicyDocument(
-        title=topic,
-        markdown=markdown,
+    result = Runner.run_sync(
+        aggregator_agent,
+        prompt,
     )
+
+    return result.final_output

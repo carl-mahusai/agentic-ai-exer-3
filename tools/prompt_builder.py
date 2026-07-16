@@ -53,6 +53,10 @@ Policy:
 """.strip()
 
 
+from models.evaluation import Evaluation
+from models.policy import PolicyDocument
+
+
 def build_publisher_prompt(
     policy: PolicyDocument,
     evaluation: Evaluation,
@@ -61,25 +65,18 @@ def build_publisher_prompt(
     Builds the prompt for the Publisher Agent.
     """
 
-    strengths = "\n".join(
-        f"- {strength}"
-        for strength in evaluation.strengths
-    )
-
-    improvements = "\n".join(
-        f"- {improvement}"
-        for improvement in evaluation.improvements
-    )
-
     return f"""
 Policy Title:
 {policy.title}
 
-Policy:
+Policy Topic:
+{policy.topic}
+
+Policy Document:
 
 {policy.markdown}
 
-Evaluation
+Evaluation Scores
 
 Clarity: {evaluation.clarity}
 
@@ -89,15 +86,17 @@ Actionability: {evaluation.actionability}
 
 Compliance: {evaluation.compliance}
 
+Evaluator Feedback
+
 Justification:
 {evaluation.justification}
 
 Strengths:
-{strengths}
+{"\n".join(f"- {strength}" for strength in evaluation.strengths)}
 
 Improvements:
-{improvements}
-""".strip()
+{"\n".join(f"- {improvement}" for improvement in evaluation.improvements)}
+"""
 
 
 def build_proponent_prompt(topic: str) -> str:

@@ -55,27 +55,6 @@ with gr.Blocks(title="Policy Brief Generator") as demo:
 
     generate_button = gr.Button("Generate Policy")
 
-    # proponent_output = gr.Markdown(
-    #     label="Proponent Arguments"
-    # )
-
-    # opponent_output = gr.Markdown(
-    #     label="Opponent Arguments"
-    # )
-
-    # policy_output = gr.Markdown(
-    #     label="Generated Policy"
-    # )
-
-    # evaluation_output = gr.JSON(
-    #     label="Evaluation"
-    # )
-
-    # publisher_output = gr.Textbox(
-    #     label="Publisher Report",
-    #     interactive=False,
-    # )
-
     with gr.Row():
 
         with gr.Group():
@@ -93,7 +72,7 @@ with gr.Blocks(title="Policy Brief Generator") as demo:
     evaluation_output = gr.JSON()
 
     gr.Markdown("## 📢 Publisher Report")
-    publisher_output = gr.Textbox(interactive=False)
+    publisher_output = gr.Textbox(show_label=False, interactive=False)
 
     generate_button.click(
         fn=generate_policy,

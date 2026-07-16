@@ -1,43 +1,31 @@
-from models.policy_generation_result import (
-    PolicyGenerationResult,
-    PolicyDocument,
-    Evaluation,
-    PublicationReport,
+from agents import (
+    run_aggregator,
+    run_evaluator,
+    run_opponent,
+    run_proponent,
+    run_publisher,
 )
+
+from models.workflow import PolicyGenerationResult
 
 
 def generate_policy_workflow(topic: str) -> PolicyGenerationResult:
-    """
-    Coordinates the policy generation workflow.
 
-    Eventually this will:
-        1. Call Proponent Agent
-        2. Call Opponent Agent
-        3. Call Aggregator Agent
-        4. Call Evaluator Agent
-        5. Call Publisher Agent
-    """
+    proponent = run_proponent(topic)
 
-    policy = PolicyDocument(
-        title="Placeholder Policy",
-        markdown=f"# {topic}\n\nPolicy generation successful.",
+    opponent = run_opponent(topic)
+
+    policy = run_aggregator(
+        topic,
+        proponent,
+        opponent,
     )
 
-    evaluation = Evaluation(
-        clarity=0.0,
-        fairness=0.0,
-        actionability=0.0,
-        compliance=0.0,
-        justification="Placeholder evaluation.",
-        strengths=[],
-        improvements=[],
-    )
+    evaluation = run_evaluator(policy)
 
-    publication = PublicationReport(
-        overall_score=0.0,
-        passed=False,
-        pdf_path=None,
-        message="Publisher has not yet been implemented.",
+    publication = run_publisher(
+        policy,
+        evaluation,
     )
 
     return PolicyGenerationResult(
